@@ -26,19 +26,50 @@ export async function createNote() {
 }
 
 export async function getNote(id) {
-    if(isNaN(id)) {
-        throw new Response("Failed to fetch user data", {
-            status: 404,
-          });
-    } 
+  if (isNaN(id)) {
+    throw new Response("Failed to fetch user data", {
+      status: 404,
+    });
+  }
 
-    const response = await fetch(`http://localhost:4000/v1/notes/${id}`);
-    if (!response.ok) {
-        throw new Response("Failed to fetch user data", {
-          status: response.status,
-        });
+  const response = await fetch(`http://localhost:4000/v1/notes/${id}`);
+  if (!response.ok) {
+    throw new Response("Failed to fetch user data", {
+      status: response.status,
+    });
+  }
+
+  const note = await response.json();
+  return note.note;
+}
+
+export async function updateNote(id, updates) {
+  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
+
+  const formData = {
+    title: updates.title,
+    content: updates.content,
+    tags: updates.tags,
+  };
+
+  fetch(apiUrl, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    
-      const note = await response.json();
-      return note.note;
+      return response.json();
+    })
+    .then((newNoteData) => {
+      // Process the newly created user data
+      console.log("New Note Data:", newNote);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 }

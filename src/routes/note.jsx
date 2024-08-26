@@ -12,9 +12,9 @@ export default function Note() {
   return (
     <div id="contact">
       <div>
-        <h1>{note.title}</h1>
-        <p>{note.content}</p>
-        <p>{note.tags}</p>
+        <h1>{note?.title}</h1>
+        <p>{note?.content}</p>
+        <p>{note?.tags}</p>
       </div>
       <div>
         <Form action="edit">

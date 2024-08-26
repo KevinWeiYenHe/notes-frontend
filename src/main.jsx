@@ -9,6 +9,8 @@ import Root, {
 
 import ErrorPage from "./error-page";
 import Note, { loader as noteLoader } from "./routes/note";
+import EditContact, { action as editAction } from "./routes/edit";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +23,12 @@ const router = createBrowserRouter([
         path: "notes/:noteId",
         element: <Note />,
         loader: noteLoader,
+      },
+      {
+        path: "notes/:noteId/edit",
+        element: <EditContact />,
+        loader: noteLoader,
+        action: editAction,
       },
     ],
   },
