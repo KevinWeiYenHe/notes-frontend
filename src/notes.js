@@ -13,16 +13,33 @@ export async function getNotes() {
   return data.notes;
 }
 
-export async function createNote() {
-  const response = await fetch(`http://localhost:4000/v1/notes/1`);
-  if (!response.ok) {
-    throw new Response("Failed to fetch user data", {
-      status: response.status,
-    });
-  }
+export async function createNote(newNote) {
+  const apiUrl = `http://localhost:4000/v1/notes`;
 
-  const note = await response.json();
-  return note.note;
+  const formData = {
+    title: newNote.title,
+    content: newNote.content,
+    tags: ["placeholder"],
+  };
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  
+    return response
 }
 
 export async function getNote(id) {
@@ -52,7 +69,7 @@ export async function updateNote(id, updates) {
     tags: updates.tags,
   };
 
-  fetch(apiUrl, {
+  const response = await fetch(apiUrl, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -65,11 +82,9 @@ export async function updateNote(id, updates) {
       }
       return response.json();
     })
-    .then((newNoteData) => {
-      // Process the newly created user data
-      console.log("New Note Data:", newNote);
-    })
     .catch((error) => {
       console.error("Error:", error);
     });
+  
+    return response
 }

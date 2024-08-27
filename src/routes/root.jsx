@@ -1,4 +1,4 @@
-import { Outlet, Link, useLoaderData, Form } from "react-router-dom";
+import { Outlet, Link, useLoaderData, Form, redirect } from "react-router-dom";
 import { getNotes, createNote } from "../notes";
 
 export async function loader() {
@@ -7,8 +7,7 @@ export async function loader() {
 }
 
 export async function action() {
-  const note = await createNote();
-  return { note };
+  return redirect(`/notes/create`);
 }
 
 export default function Root() {

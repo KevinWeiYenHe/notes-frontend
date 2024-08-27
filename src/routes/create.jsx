@@ -1,16 +1,15 @@
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
-import { updateNote } from "../notes"
+import { createNote, updateNote } from "../notes"
 
-export async function action({ request, params }) {
+export async function action({ request }) {
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  await updateNote(params.noteId, updates);
-  return redirect(`/notes/${params.noteId}`);
+  const newNote = Object.fromEntries(formData);
+  const response = await createNote(newNote);
+  return redirect(`/notes/${response.note.id}`);
 }
 
-export default function EditNote() {
-  const { note } = useLoaderData();
+export default function CreateNote() {
 
   return (
     <Form method="post" id="contact-form">
@@ -21,12 +20,11 @@ export default function EditNote() {
           aria-label="Title of Note"
           type="text"
           name="title"
-          defaultValue={note?.title}
         />
       </label>
       <label>
         <span>Content</span>
-        <textarea name="content" defaultValue={note?.content} rows={20} />
+        <textarea name="content" rows={20} />
       </label>
       <p>
         <button type="submit">Save</button>
