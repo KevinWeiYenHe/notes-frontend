@@ -7,10 +7,12 @@ import Root, {
   action as rootAction,
 } from "./routes/root";
 
+import Index from "./routes/index";
 import ErrorPage from "./error-page";
 import Note, { loader as noteLoader } from "./routes/note";
 import EditNote, { action as editAction } from "./routes/edit";
-import CreateNote, { action as createAction} from "./routes/create";
+import CreateNote, { action as createAction } from "./routes/create";
+import { action as destroyAction } from "./routes/destroy";
 
 const router = createBrowserRouter([
   {
@@ -20,9 +22,10 @@ const router = createBrowserRouter([
     loader: rootLoader,
     action: rootAction,
     children: [
+      { index: true, element: <Index /> },
       {
         path: "notes/create",
-        element: <CreateNote/>,
+        element: <CreateNote />,
         action: createAction,
       },
       {
@@ -35,6 +38,11 @@ const router = createBrowserRouter([
         element: <EditNote />,
         loader: noteLoader,
         action: editAction,
+      },
+      {
+        path: "notes/:noteId/destroy",
+        errorElement: <div>Oops! There was an error.</div>,
+        action: destroyAction,
       },
     ],
   },

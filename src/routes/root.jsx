@@ -1,4 +1,11 @@
-import { Outlet, Link, useLoaderData, Form, redirect } from "react-router-dom";
+import {
+  Outlet,
+  NavLink,
+  useLoaderData,
+  Form,
+  redirect,
+  useNavigation,
+} from "react-router-dom";
 import { getNotes, createNote } from "../notes";
 
 export async function loader() {
@@ -12,12 +19,13 @@ export async function action() {
 
 export default function Root() {
   const { notes } = useLoaderData();
+  const navigation = useNavigation();
   return (
     <>
       <div id="sidebar">
         <h1>React Router Contacts</h1>
         <div>
-          <form id="search-form" role="search">
+          <Form id="search-form" role="search">
             <input
               id="q"
               aria-label="Search contacts"
@@ -27,7 +35,7 @@ export default function Root() {
             />
             <div id="search-spinner" aria-hidden hidden={true} />
             <div className="sr-only" aria-live="polite"></div>
-          </form>
+          </Form>
           <Form method="post">
             <button type="submit">New</button>
           </Form>
@@ -37,9 +45,7 @@ export default function Root() {
             <ul>
               {notes.map((note) => (
                 <li key={note.id}>
-                  <Link to={`notes/${note.id}`}>
-                  {note.title}
-                  </Link>
+                  <NavLink to={`notes/${note.id}`}>{note.title}</NavLink>
                 </li>
               ))}
             </ul>
@@ -50,7 +56,10 @@ export default function Root() {
           )}
         </nav>
       </div>
-      <div id="detail">
+      <div
+        id="detail"
+        className={navigation.state === "loading" ? "loading" : ""}
+      >
         <Outlet />
       </div>
     </>

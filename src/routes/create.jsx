@@ -1,6 +1,6 @@
-import { Form, useLoaderData, redirect } from "react-router-dom";
+import { Form, redirect, useNavigate } from "react-router-dom";
 
-import { createNote, updateNote } from "../notes"
+import { createNote } from "../notes";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -10,6 +10,7 @@ export async function action({ request }) {
 }
 
 export default function CreateNote() {
+  const navigate = useNavigate();
 
   return (
     <Form method="post" id="contact-form">
@@ -28,7 +29,14 @@ export default function CreateNote() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button
+          type="button"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          Cancel
+        </button>
       </p>
     </Form>
   );

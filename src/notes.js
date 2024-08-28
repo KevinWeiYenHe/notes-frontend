@@ -13,6 +13,8 @@ export async function getNotes() {
   return data.notes;
 }
 
+
+
 export async function createNote(newNote) {
   const apiUrl = `http://localhost:4000/v1/notes`;
 
@@ -43,12 +45,6 @@ export async function createNote(newNote) {
 }
 
 export async function getNote(id) {
-  if (isNaN(id)) {
-    throw new Response("Failed to fetch user data", {
-      status: 404,
-    });
-  }
-
   const response = await fetch(`http://localhost:4000/v1/notes/${id}`);
   if (!response.ok) {
     throw new Response("Failed to fetch user data", {
@@ -86,5 +82,24 @@ export async function updateNote(id, updates) {
       console.error("Error:", error);
     });
   
+    return response
+}
+
+export async function deleteNote(id) {
+  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
+
+  const response = await fetch(apiUrl, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
     return response
 }
