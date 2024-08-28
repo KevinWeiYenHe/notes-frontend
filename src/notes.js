@@ -2,18 +2,26 @@ import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 
 export async function getNotes() {
-  const response = await fetch(`http://localhost:4000/v1/notes`);
-  if (!response.ok) {
-    throw new Response("Failed to fetch user data", {
-      status: response.status,
+  const apiUrl = `http://localhost:4000/v1/notes`;
+
+  const response = await fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Response("Failed to fetch note data", {
+          status: response.status,
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.notes;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  }
 
-  const data = await response.json();
-  return data.notes;
+  return response;
 }
-
-
 
 export async function createNote(newNote) {
   const apiUrl = `http://localhost:4000/v1/notes`;
@@ -21,7 +29,7 @@ export async function createNote(newNote) {
   const formData = {
     title: newNote.title,
     content: newNote.content,
-    tags: ["placeholder"],
+    tags: newNote.tags.split(","),
   };
 
   const response = await fetch(apiUrl, {
@@ -33,27 +41,39 @@ export async function createNote(newNote) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Response("Failed to fetch note data", {
+          status: response.status,
+        });
       }
       return response.json();
     })
     .catch((error) => {
       console.error("Error:", error);
     });
-  
-    return response
+
+  return response;
 }
 
 export async function getNote(id) {
-  const response = await fetch(`http://localhost:4000/v1/notes/${id}`);
-  if (!response.ok) {
-    throw new Response("Failed to fetch user data", {
-      status: response.status,
-    });
-  }
+  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
 
-  const note = await response.json();
-  return note.note;
+  const response = await fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Response("Failed to fetch note data", {
+          status: response.status,
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.note;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
+  return response;
 }
 
 export async function updateNote(id, updates) {
@@ -62,7 +82,7 @@ export async function updateNote(id, updates) {
   const formData = {
     title: updates.title,
     content: updates.content,
-    tags: updates.tags,
+    tags: updates.tags.split(","),
   };
 
   const response = await fetch(apiUrl, {
@@ -74,15 +94,17 @@ export async function updateNote(id, updates) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Response("Failed to fetch note data", {
+          status: response.status,
+        });
       }
       return response.json();
     })
     .catch((error) => {
       console.error("Error:", error);
     });
-  
-    return response
+
+  return response;
 }
 
 export async function deleteNote(id) {
@@ -93,7 +115,9 @@ export async function deleteNote(id) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Response("Failed to fetch note data", {
+          status: response.status,
+        });
       }
       return response.json();
     })
@@ -101,5 +125,5 @@ export async function deleteNote(id) {
       console.error("Error:", error);
     });
 
-    return response
+  return response;
 }
