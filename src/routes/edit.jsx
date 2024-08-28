@@ -22,12 +22,22 @@ export default function EditNote() {
           aria-label="Title of Note"
           type="text"
           name="title"
-          defaultValue={note?.title}
+          defaultValue={note.title}
         />
       </label>
       <label>
         <span>Content</span>
-        <textarea name="content" defaultValue={note?.content} rows={20} />
+        <textarea name="content" defaultValue={note.content} rows={20} />
+      </label>
+      <label>
+        <span>Tags</span>
+        <input
+          placegolder="Tags"
+          aria-label="Words associated with the note"
+          type="text"
+          name="tags"
+          defaultValue={note.tags}
+        />
       </label>
       <p>
         <button type="submit">Save</button>

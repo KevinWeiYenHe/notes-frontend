@@ -27,6 +27,16 @@ export default function CreateNote() {
         <span>Content</span>
         <textarea name="content" rows={20} />
       </label>
+      <label>
+        <span>Tags</span>
+        <input
+          placegolder="Tags"
+          aria-label="Words associated with the note"
+          type="text"
+          name="tags"
+          defaultValue={"placeholder"}
+        />
+      </label>
       <p>
         <button type="submit">Save</button>
         <button
