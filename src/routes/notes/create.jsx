@@ -1,6 +1,6 @@
 import { Form, redirect, useNavigate } from "react-router-dom";
 
-import { createNote } from "../notes";
+import { createNote } from "../../notes";
 
 export async function action({ request }) {
   const formData = await request.formData();

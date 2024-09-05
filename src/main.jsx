@@ -7,12 +7,13 @@ import Root, {
   action as rootAction,
 } from "./routes/root";
 
-import Index from "./routes/index";
+import Index from "./routes/notes/index";
 import ErrorPage from "./error-page";
-import Note, { loader as noteLoader } from "./routes/note";
-import EditNote, { action as editAction } from "./routes/edit";
-import CreateNote, { action as createAction } from "./routes/create";
-import { action as destroyAction } from "./routes/destroy";
+import Note, { loader as noteLoader } from "./routes/notes/note";
+import EditNote, { action as editAction } from "./routes/notes/edit";
+import CreateNote, { action as createAction } from "./routes/notes/create";
+import { action as destroyAction } from "./routes/notes/destroy";
+import Signup, {action as userSignUpAction } from "./routes/signup/signup";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +46,12 @@ const router = createBrowserRouter([
         action: destroyAction,
       },
     ],
-  },
+  },{
+    path : "/signup",
+    element: <Signup/>,
+    action:userSignUpAction
+    
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(

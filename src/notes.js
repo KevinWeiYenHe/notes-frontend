@@ -1,10 +1,13 @@
-import { matchSorter } from "match-sorter";
-import sortBy from "sort-by";
+const apiDomain = `http://localhost:4000`
 
-export async function getNotes() {
-  const apiUrl = `http://localhost:4000/v1/notes`;
+export async function getNotes(query) {
+  if (!query) {
+    query = ""
+  }
+  
+  const apiEndpoint = `${apiDomain}/v1/notes?title=${query}`;
 
-  const response = await fetch(apiUrl)
+  const response = await fetch(apiEndpoint)
     .then((response) => {
       if (!response.ok) {
         throw new Response("Failed to fetch note data", {
@@ -24,7 +27,7 @@ export async function getNotes() {
 }
 
 export async function createNote(newNote) {
-  const apiUrl = `http://localhost:4000/v1/notes`;
+  const apiEndpoint = `${apiDomain}/v1/notes`;
 
   const formData = {
     title: newNote.title,
@@ -32,7 +35,7 @@ export async function createNote(newNote) {
     tags: newNote.tags.split(","),
   };
 
-  const response = await fetch(apiUrl, {
+  const response = await fetch(apiEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -55,9 +58,9 @@ export async function createNote(newNote) {
 }
 
 export async function getNote(id) {
-  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
 
-  const response = await fetch(apiUrl)
+  const response = await fetch(apiEndpoint)
     .then((response) => {
       if (!response.ok) {
         throw new Response("Failed to fetch note data", {
@@ -77,7 +80,7 @@ export async function getNote(id) {
 }
 
 export async function updateNote(id, updates) {
-  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
 
   const formData = {
     title: updates.title,
@@ -85,7 +88,7 @@ export async function updateNote(id, updates) {
     tags: updates.tags.split(","),
   };
 
-  const response = await fetch(apiUrl, {
+  const response = await fetch(apiEndpoint, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -108,9 +111,9 @@ export async function updateNote(id, updates) {
 }
 
 export async function deleteNote(id) {
-  const apiUrl = `http://localhost:4000/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
 
-  const response = await fetch(apiUrl, {
+  const response = await fetch(apiEndpoint, {
     method: "DELETE",
   })
     .then((response) => {

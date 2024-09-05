@@ -1,6 +1,6 @@
 import { Form, useLoaderData, redirect, useNavigate } from "react-router-dom";
 
-import { updateNote } from "../notes";
+import { updateNote } from "../../notes";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
@@ -19,7 +19,7 @@ export default function EditNote() {
         <span>Title</span>
         <input
           placeholder="Title"
-          aria-label="Title of Note"
+          aria-label="Title of note"
           type="text"
           name="title"
           defaultValue={note.title}

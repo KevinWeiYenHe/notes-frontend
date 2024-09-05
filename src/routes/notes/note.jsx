@@ -1,5 +1,5 @@
 import { Form, useLoaderData } from "react-router-dom";
-import { getNote } from "../notes";
+import { getNote } from "../../notes";
 
 export async function loader({ params }) {
   const note = await getNote(params.noteId);
@@ -13,7 +13,7 @@ export default function Note() {
     <div id="contact">
       <div>
         <h1>{note?.title}</h1>
-        <p>{note?.content}</p>
+        <pre>{note?.content}</pre>
         <p>{note?.tags}</p>
       </div>
       <div>
