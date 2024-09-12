@@ -14,6 +14,7 @@ import EditNote, { action as editAction } from "./routes/notes/edit";
 import CreateNote, { action as createAction } from "./routes/notes/create";
 import { action as destroyAction } from "./routes/notes/destroy";
 import Signup, {action as userSignUpAction } from "./routes/signup/signup";
+import Login, {action as userLoginAction } from "./routes/login/login";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,10 @@ const router = createBrowserRouter([
     path : "/signup",
     element: <Signup/>,
     action:userSignUpAction
-    
+  }, {
+    path : "/login",
+    element: <Login/>,
+    action:userLoginAction
   }
 ]);
 

@@ -1,25 +1,16 @@
 import { Form, redirect } from "react-router-dom";
-import { signupUser } from "../../signup";
+import { loginUser } from "../../users";
 
 export async function action({ request }) {
   const formData = await request.formData();
-  const newUser = Object.fromEntries(formData);
-  const response = await signupUser(newUser);
+  const loginData = Object.fromEntries(formData);
+  const response = await loginUser(loginData);
   return redirect(`/`);
 }
 
-export default function Signup() {
+export default function Login() {
   return (
-    <Form method="post" id="user-signup-form">
-      <label>
-        <span>Name</span>
-        <input
-          placeholder="Name"
-          aria-label="Name of user account"
-          type="text"
-          name="name"
-        />
-      </label>
+    <Form method="post" id="user-login-form">
       <label>
         <span>email</span>
         <input
@@ -39,7 +30,7 @@ export default function Signup() {
         />
       </label>
       <p>
-        <button type="submit">Signup</button>
+        <button type="submit">Login</button>
       </p>
     </Form>
   );

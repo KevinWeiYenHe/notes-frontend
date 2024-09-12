@@ -1,13 +1,21 @@
-const apiDomain = `http://localhost:4000`
+const apiDomain = `http://localhost:4000/v2`;
+
+function getCookieByName(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
 export async function getNotes(query) {
   if (!query) {
-    query = ""
+    query = "";
   }
-  
-  const apiEndpoint = `${apiDomain}/v1/notes?title=${query}`;
 
-  const response = await fetch(apiEndpoint)
+  const apiEndpoint = `${apiDomain}/notes?title=${query}`;
+
+  const response = await fetch(apiEndpoint, {
+    credentials: "include",
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Response("Failed to fetch note data", {
@@ -27,7 +35,7 @@ export async function getNotes(query) {
 }
 
 export async function createNote(newNote) {
-  const apiEndpoint = `${apiDomain}/v1/notes`;
+  const apiEndpoint = `${apiDomain}/notes`;
 
   const formData = {
     title: newNote.title,
@@ -37,6 +45,7 @@ export async function createNote(newNote) {
 
   const response = await fetch(apiEndpoint, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -58,9 +67,11 @@ export async function createNote(newNote) {
 }
 
 export async function getNote(id) {
-  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/notes/${id}`;
 
-  const response = await fetch(apiEndpoint)
+  const response = await fetch(apiEndpoint, {
+    credentials: "include",
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Response("Failed to fetch note data", {
@@ -80,7 +91,7 @@ export async function getNote(id) {
 }
 
 export async function updateNote(id, updates) {
-  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/notes/${id}`;
 
   const formData = {
     title: updates.title,
@@ -90,6 +101,7 @@ export async function updateNote(id, updates) {
 
   const response = await fetch(apiEndpoint, {
     method: "PATCH",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -111,10 +123,11 @@ export async function updateNote(id, updates) {
 }
 
 export async function deleteNote(id) {
-  const apiEndpoint = `${apiDomain}/v1/notes/${id}`;
+  const apiEndpoint = `${apiDomain}/notes/${id}`;
 
   const response = await fetch(apiEndpoint, {
     method: "DELETE",
+    credentials: "include",
   })
     .then((response) => {
       if (!response.ok) {
