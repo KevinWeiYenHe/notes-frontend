@@ -29,3 +29,27 @@ export async function loginUser(userForm) {
     })
     return response
 }
+
+export async function signoutUser() {
+    const apiEndpoint = `${apiDomain}/tokens/revoke`
+
+    const response = await fetch(apiEndpoint, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Response("Server Error", {
+                status: response.status
+            })
+        }
+        return response.json();
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+    })
+    return response
+}

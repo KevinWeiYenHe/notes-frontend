@@ -15,6 +15,7 @@ import CreateNote, { action as createAction } from "./routes/notes/create";
 import { action as destroyAction } from "./routes/notes/destroy";
 import Signup, {action as userSignUpAction } from "./routes/signup/signup";
 import Login, {action as userLoginAction } from "./routes/login/login";
+import Signout, {action as userSignoutAction} from "./routes/signout/signout";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
     path : "/login",
     element: <Login/>,
     action:userLoginAction
+  }, {
+    path : "/signout",
+    element: <Signout/>,
+    action:userSignoutAction
   }
 ]);
 
