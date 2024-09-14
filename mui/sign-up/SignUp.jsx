@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import getSignUpTheme from './theme/getSignUpTheme';
+import getSignUpTheme from '../theme/getSignUpTheme';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-import TemplateFrame from './TemplateFrame';
+import TemplateFrame from '../theme/TemplateFrame';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -25,11 +25,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.up('sm')]: {
-    width: '450px',
-  },
   ...theme.applyStyles('dark', {
     boxShadow:
       'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
@@ -37,28 +37,37 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: '100%',
-  padding: 4,
-  backgroundImage:
-    'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-  backgroundRepeat: 'no-repeat',
-  ...theme.applyStyles('dark', {
+  padding: 20,
+  marginTop: '10vh',
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
     backgroundImage:
-      'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-  }),
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+    backgroundRepeat: 'no-repeat',
+    ...theme.applyStyles('dark', {
+      backgroundImage:
+        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+    }),
+  },
 }));
 
 export default function SignUp() {
   const [mode, setMode] = React.useState('light');
-  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+  const [showCustomTheme, setShowCustomTheme] = React.useState(true); 
   const defaultTheme = createTheme({ palette: { mode } });
   const SignUpTheme = createTheme(getSignUpTheme(mode));
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
     // Check if there is a preferred mode in localStorage
@@ -84,6 +93,7 @@ export default function SignUp() {
     setShowCustomTheme((prev) => !prev);
   };
 
+  // validating Input
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
@@ -121,6 +131,7 @@ export default function SignUp() {
     return isValid;
   };
 
+  // submission of form
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -143,15 +154,9 @@ export default function SignUp() {
       
         <CssBaseline enableColorScheme />
         <SignUpContainer direction="column" justifyContent="space-between">
-          <Stack
-            sx={{
-              justifyContent: 'center',
-              height: '100dvh',
-              p: 2,
-            }}
-          >
             <Card variant="outlined">
               <SitemarkIcon />
+
               <Typography
                 component="h1"
                 variant="h4"
@@ -167,46 +172,49 @@ export default function SignUp() {
                 <FormControl>
                   <FormLabel htmlFor="name">Full name</FormLabel>
                   <TextField
-                    autoComplete="name"
+                    id="name"
                     name="name"
+                    autoComplete="name"
+                    placeholder="Jon Snow"
                     required
                     fullWidth
-                    id="name"
-                    placeholder="Jon Snow"
+                    color={nameError ? 'error' : 'primary'}
                     error={nameError}
                     helperText={nameErrorMessage}
-                    color={nameError ? 'error' : 'primary'}
+                    autoFocus
                   />
                 </FormControl>
                 <FormControl>
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <TextField
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="your@email.com"
                     required
                     fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    color={passwordError ? 'error' : 'primary'}
+                    sx={{ ariaLabel: 'email' }}
                     variant="outlined"
                     error={emailError}
                     helperText={emailErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
                   />
                 </FormControl>
                 <FormControl>
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <TextField
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="••••••"
                     required
                     fullWidth
-                    name="password"
-                    placeholder="••••••"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
+                    color={passwordError ? 'error' : 'primary'}
                     variant="outlined"
                     error={passwordError}
                     helperText={passwordErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
                   />
                 </FormControl>
                 <FormControlLabel
@@ -225,7 +233,7 @@ export default function SignUp() {
                   Already have an account?{' '}
                   <span>
                     <Link
-                      href="/material-ui/getting-started/templates/sign-in/"
+                      href="/v2/signin"
                       variant="body2"
                       sx={{ alignSelf: 'center' }}
                     >
@@ -234,9 +242,8 @@ export default function SignUp() {
                   </span>
                 </Typography>
               </Box>
-              <Divider>
-                <Typography sx={{ color: 'text.secondary' }}>or</Typography>
-              </Divider>
+              <Divider>or</Divider>
+
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   type="submit"
@@ -258,7 +265,6 @@ export default function SignUp() {
                 </Button>
               </Box>
             </Card>
-          </Stack>
         </SignUpContainer>
       </ThemeProvider>
     </TemplateFrame>

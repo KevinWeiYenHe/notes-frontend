@@ -12,11 +12,13 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
+import { createTheme, styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
+import ColorModeSelect from '../../shared-theme/ColorModeSelect';
+import { ThemeProvider } from '@emotion/react';
+import TemplateFrame from '../theme/TemplateFrame';
+import getSignUpTheme from '../theme/getSignUpTheme';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -56,12 +58,42 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function SignIn() {
+  const [mode, setMode] = React.useState('light');
+  const [showCustomTheme, setShowCustomTheme] = React.useState(true); 
+  const defaultTheme = createTheme({ palette: { mode } });
+  const SignUpTheme = createTheme(getSignUpTheme(mode));
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false); // dialog
+
+    // This code only runs on the client side, to determine the system color preference
+    React.useEffect(() => {
+    // Check if there is a preferred mode in localStorage
+    const savedMode = localStorage.getItem('themeMode');
+    if (savedMode) {
+      setMode(savedMode);
+    } else {
+      // If no preference is found, it uses system preference
+      const systemPrefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches;
+      setMode(systemPrefersDark ? 'dark' : 'light');
+    }
+  }, []);
+
+  const toggleColorMode = () => {
+    const newMode = mode === 'dark' ? 'light' : 'dark';
+    setMode(newMode);
+    localStorage.setItem('themeMode', newMode); // Save the selected mode to localStorage
+  };
+
+  const toggleCustomTheme = () => {
+    setShowCustomTheme((prev) => !prev);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -71,15 +103,7 @@ export default function SignIn(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
+  // Validating Input
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
@@ -107,13 +131,31 @@ export default function SignIn(props) {
     return isValid;
   };
 
+  // submission of form
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
+
   return (
-    <AppTheme {...props}>
+    <TemplateFrame
+      toggleCustomTheme={toggleCustomTheme}
+      showCustomTheme={showCustomTheme}
+      mode={mode}
+      toggleColorMode={toggleColorMode}
+    >
+      <ThemeProvider theme={showCustomTheme ? SignUpTheme : defaultTheme}>
+
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
           <SitemarkIcon />
+
           <Typography
             component="h1"
             variant="h4"
@@ -135,19 +177,19 @@ export default function SignIn(props) {
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
-                error={emailError}
-                helperText={emailErrorMessage}
                 id="email"
-                type="email"
                 name="email"
-                placeholder="your@email.com"
+                type="email"
                 autoComplete="email"
-                autoFocus
+                placeholder="your@email.com"
                 required
                 fullWidth
-                variant="outlined"
                 color={emailError ? 'error' : 'primary'}
                 sx={{ ariaLabel: 'email' }}
+                variant="outlined"
+                error={emailError}
+                helperText={emailErrorMessage}
+                autoFocus
               />
             </FormControl>
             <FormControl>
@@ -163,18 +205,17 @@ export default function SignIn(props) {
                 </Link>
               </Box>
               <TextField
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                name="password"
-                placeholder="••••••"
-                type="password"
                 id="password"
+                name="password"
+                type="password"
                 autoComplete="current-password"
-                autoFocus
+                placeholder="••••••"
                 required
                 fullWidth
-                variant="outlined"
                 color={passwordError ? 'error' : 'primary'}
+                variant="outlined"
+                error={passwordError}
+                helperText={passwordErrorMessage}
               />
             </FormControl>
             <FormControlLabel
@@ -194,7 +235,7 @@ export default function SignIn(props) {
               Don&apos;t have an account?{' '}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href="/v2/signup"
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
@@ -204,6 +245,7 @@ export default function SignIn(props) {
             </Typography>
           </Box>
           <Divider>or</Divider>
+
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Button
               type="submit"
@@ -226,6 +268,7 @@ export default function SignIn(props) {
           </Box>
         </Card>
       </SignInContainer>
-    </AppTheme>
+      </ThemeProvider>
+    </TemplateFrame>
   );
 }
