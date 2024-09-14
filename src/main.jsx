@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
+//import "./index.css";
 import Root, {
   loader as rootLoader,
   action as rootAction,
@@ -13,9 +13,15 @@ import Note, { loader as noteLoader } from "./routes/notes/note";
 import EditNote, { action as editAction } from "./routes/notes/edit";
 import CreateNote, { action as createAction } from "./routes/notes/create";
 import { action as destroyAction } from "./routes/notes/destroy";
-import Signup, {action as userSignUpAction } from "./routes/signup/signup";
-import Login, {action as userLoginAction } from "./routes/login/login";
-import Signout, {action as userSignoutAction} from "./routes/signout/signout";
+import Signup, { action as userSignUpAction } from "./routes/signup/signup";
+import Login, { action as userLoginAction } from "./routes/login/login"
+import Signout, { action as userSignoutAction } from "./routes/signout/signout";
+
+import SignInPage, {
+  action as userSignInAction,
+} from "./routes/v2/signinpage";
+
+import SignUpPage from "./routes/v2/signuppage";
 
 const router = createBrowserRouter([
   {
@@ -48,18 +54,29 @@ const router = createBrowserRouter([
         action: destroyAction,
       },
     ],
-  },{
-    path : "/signup",
-    element: <Signup/>,
-    action:userSignUpAction
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+    action: userSignUpAction,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+    action: userLoginAction,
+  },
+  {
+    path: "/signout",
+    element: <Signout />,
+    action: userSignoutAction,
+  },
+  {
+    path: "/v2/signin",
+    element: <SignInPage />,
+    action: userSignInAction,
   }, {
-    path : "/login",
-    element: <Login/>,
-    action:userLoginAction
-  }, {
-    path : "/signout",
-    element: <Signout/>,
-    action:userSignoutAction
+    path:"/v2/signup",
+    element: <SignUpPage/>
   }
 ]);
 
